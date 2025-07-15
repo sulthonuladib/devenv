@@ -4,7 +4,7 @@ sudo apt update
 sudo apt install -y \
     software-properties-common \
     build-essential \
-	jq fd-find ripgrep \
+	jq fd-find ripgrep fzf \
 	tmux direnv \
 	wget \
 	gh
