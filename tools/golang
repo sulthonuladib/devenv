@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PREFIX="$HOME/.local"
+GOROOT="$PREFIX/go"
+
+# 1. Get latest Go version (first line)
+VERSION=$(curl -Ls https://go.dev/VERSION?m=text | head -n1)
+# e.g. "go1.24.5"
+echo "Latest Go version: $VERSION"
+
+# 2. Build download URL and fetch tarball with redirect support
+TARBALL="${VERSION}.linux-amd64.tar.gz"
+URL="https://go.dev/dl/${TARBALL}"
+echo "Downloading $TARBALL..."
+curl -fsL -o "$TARBALL" "$URL"
+
+# 3. Remove old Go installation if it exists
+if [ -d "$GOROOT" ]; then
+  echo "Removing existing Go at $GOROOT"
+  rm -rf "$GOROOT"
+fi
+
+# 4. Extract into the target directory
+echo "Extracting to $GOROOT..."
+mkdir -p "$PREFIX"
+tar -C "$PREFIX" -xzf "$TARBALL"
+
+# 5. Clean up the downloaded archive
+echo "Removing downloaded tarball"
+rm -f "$TARBALL"
+
+echo "Go $VERSION installed to $GOROOT"
+echo "To use it, add the following to your shell profile (optional):"
+echo 'export PATH="$HOME/.local/go/bin:$PATH"'

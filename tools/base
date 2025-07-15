@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+sudo apt update
+sudo apt install -y \
+    software-properties-common \
+    build-essential \
+	jq fd-find ripgrep \
+	tmux direnv \
+	wget \
+	gh

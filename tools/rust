@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+RUSTUP_DIR="$HOME/.rustup"
+
+# Skip if rustup is already installed
+if [ -d "$RUSTUP_DIR" ]; then
+  echo "Rust is already installed at $RUSTUP_DIR; skipping installation."
+  exit 0
+fi
+
+# Ensure curl is available
+if ! command -v curl &>/dev/null; then
+  echo "Installing curl..."
+  sudo apt update
+  sudo apt install -y curl
+fi
+
+# Download and run rustup-init with non-interactive options
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --default-toolchain stable --profile default
+
+# Verify installation
+if [ -x "$HOME/.cargo/bin/rustc" ]; then
+  echo "Rust installed successfully."
+  echo "To use it in this session, run:"
+  echo 'export PATH="$HOME/.cargo/bin:$PATH"'
+else
+  echo "Error: rustc not found at $HOME/.cargo/bin/rustc" >&2
+  exit 1
+fi
+

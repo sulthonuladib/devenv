@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SRC_DIR="./configs/home"
+DEST="$HOME"
+
+# Ensure source exists
+if [ ! -d "$SRC_DIR" ]; then
+  echo "Source directory '$SRC_DIR' does not exist." >&2
+  exit 1
+fi
+
+echo "Syncing dotfiles from '$SRC_DIR' to '$DEST'..."
+
+rsync -avh --no-perms --no-owner --no-group \
+  "$SRC_DIR/." "$DEST/"
+
+echo "Dotfiles synchronized."
+

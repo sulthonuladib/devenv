@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Variables
+FNM_DIR="${HOME}/.local/share"
+INSTALL_URL="https://fnm.vercel.app/install"
+
+# 1️⃣ Check if fnm is already installed in the install dir
+if [ -x "${FNM_DIR}/fnm" ]; then
+  echo "fnm already installed at ${FNM_DIR}; skipping installation."
+else
+  echo "Installing fnm to ${FNM_DIR} (skipping shell profile modifications)..."
+  curl -fsSL "$INSTALL_URL" | bash -s -- --skip-shell
+  echo "fnm installed successfully."
+fi
+
+#  2 Verify
+echo "Current fnm version:"
+exec "${FNM_DIR}/fnm/fnm" --version
+

@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PREFIX="$HOME/.oh-my-zsh"
+
+echo "## INSTALLING ZSH"
+sudo apt update
+sudo apt install -y zsh
+
+echo ""
+echo "## INSTALLING OH-MY-ZSH"
+if [ -x $PREFIX ]; then
+  echo "oh-my-zsh already installed at ${PREFIX}; skipping installation."
+else
+  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+fi
+
+

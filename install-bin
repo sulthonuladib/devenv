@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SRC_DIR="./bin"
+DEST="$HOME/.local/bin"
+
+# Ensure source exists
+if [ ! -d "$SRC_DIR" ]; then
+  echo "Source directory '$SRC_DIR' does not exist." >&2
+  exit 1
+fi
+
+# create destination directory if it doesn't exist
+if [ ! -d "$DEST" ]; then
+  echo "Destination directory '$DEST' does not exist. Creating..."
+  mkdir -p "$DEST"
+fi
+
+echo "Syncing dotfiles from '$SRC_DIR' to '$DEST'..."
+
+rsync -avh --no-perms --no-owner --no-group \
+  "$SRC_DIR/." "$DEST/"
+
+echo "bin installed successfully."
+

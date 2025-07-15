@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Constants
+BUILD_DIR="$HOME/build"
+NVIM_DIR="$BUILD_DIR/neovim"
+
+echo "Setting up build directory at $BUILD_DIR"
+mkdir -p "$BUILD_DIR"
+
+# Clone or update
+if [ ! -d "$NVIM_DIR/.git" ]; then
+  echo "Cloning Neovim repo into $NVIM_DIR"
+  git clone https://github.com/neovim/neovim.git --depth=1 "$NVIM_DIR"
+fi
+
+cd "$NVIM_DIR"
+echo "Switching to master branch and fetching latest"
+git fetch origin
+git checkout master
+git pull --rebase origin master
+
+# Install dependencies
+echo "Installing build dependencies via apt"
+sudo apt update
+sudo apt install -y \
+  ninja-build gettext libtool \
+  libtool-bin autoconf automake \
+  cmake g++ pkg-config unzip curl doxygen
+
+# Create build
+echo "Building Neovim (RelWithDebInfo)"
+make CMAKE_BUILD_TYPE=RelWithDebInfo
+
+# Install
+echo "Installing Neovim (may require sudo)"
+sudo make install
+
+echo "Neovim built and installed. Version info:"
+nvim --version | head -n2
+

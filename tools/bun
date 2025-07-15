@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BUN_DIR="$HOME/.bun"
+INSTALL_URL="https://bun.sh/install"
+ZSHRC="$HOME/.zshrc"
+TMP_ZSHRC="$HOME/.zshrc.bak.bun"
+
+# 1. Skip if Bun is already installed
+if [ -d "$BUN_DIR" ]; then
+  echo "Bun already installed in $BUN_DIR – skipping installation."
+  exit 0
+fi
+
+# 2. Backup existing .zshrc if it exists
+if [ -f "$ZSHRC" ]; then
+  cp "$ZSHRC" "$TMP_ZSHRC"
+  echo "Backup of .zshrc created at $TMP_ZSHRC"
+fi
+
+# 3. Ensure unzip is available
+if ! command -v unzip &>/dev/null; then
+  echo "Installing unzip (required by Bun)..."
+  sudo apt update
+  sudo apt install -y unzip
+fi
+
+# 4. Download and extract Bun
+curl -fsSL https://bun.sh/install | bash
+
+# 7. Verify installation
+if [ -x "${BUN_DIR}/bin/bun" ]; then
+  echo "Bun installed successfully at $BUN_DIR."
+  echo "To use it in this session, run:"
+  echo 'export PATH="$HOME/.bun/bin:$PATH"'
+else
+  echo "Error: bun not found at $BUN_DIR/bin/bun" >&2
+  exit 1
+fi
+
+# 8. Restore .zshrc if it was backed up
+if [ -f "$TMP_ZSHRC" ]; then
+  mv "$TMP_ZSHRC" "$ZSHRC"
+  echo "Restored original .zshrc from backup."
+fi
+
