@@ -31,7 +31,7 @@ export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.local/share/zig:$PATH"
 
 # local bin
-export PATH="$HOME/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
 # scrcpy
 # export PATH="$HOME/bin/scrcpy:$PATH"
